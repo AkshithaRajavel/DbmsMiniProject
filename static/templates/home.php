@@ -5,6 +5,9 @@
         },function(){document.location.href="/"});
     }
 </script>
+<?php 
+$con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
+?>
 <body class="m-2 p-2 m-lg-3">
 <!--NAVIGATION BAR-->
     <div class="container-fluid position-sticky top-0 p-3 mb-3 bg-white d-block d-lg-none">
@@ -51,7 +54,7 @@
     <div id="events-body" 
     class="row row-cols-1 row-cols-lg-2 justify-content-center position-static">
     <?php
-    $events = mysqli_query($_ENV['con'],"SELECT * FROM events");
+    $events = mysqli_query($con,"SELECT * FROM events");
     $type='event';
     while($Q_result = mysqli_fetch_assoc($events)){
         $title=$Q_result['title'];
@@ -60,7 +63,7 @@
         $fee=$Q_result['fee'];
         $added=0;
         if(!$admin & $LoggedIn){
-        if(mysqli_fetch_assoc(mysqli_query($_ENV['con'],"SELECT * FROM event_registrations WHERE user_email='$email'AND event='$title'")))$added=1;}
+        if(mysqli_fetch_assoc(mysqli_query($con,"SELECT * FROM event_registrations WHERE user_email='$email'AND event='$title'")))$added=1;}
         include "static/templates/item.php";
     }
     ?>
@@ -72,7 +75,7 @@
     <div id="stalls-body"
     class="row row-cols-1 row-cols-lg-2 justify-content-center">
     <?php
-    $stalls = mysqli_query($_ENV['con'],"SELECT * FROM stalls ORDER BY NULL");
+    $stalls = mysqli_query($con,"SELECT * FROM stalls ORDER BY NULL");
     $type='stall';
     while($Q_result = mysqli_fetch_assoc($stalls)){
         $title=$Q_result['title'];
@@ -81,7 +84,7 @@
         $fee=$Q_result['fee'];
         $added=0;
         if(!$admin & $LoggedIn){
-        if(mysqli_fetch_assoc(mysqli_query($_ENV['con'],"SELECT * FROM stall_registrations WHERE user_email='$email'AND stall='$title'")))$added=1;}
+        if(mysqli_fetch_assoc(mysqli_query($con,"SELECT * FROM stall_registrations WHERE user_email='$email'AND stall='$title'")))$added=1;}
         include "static/templates/item.php";}
     ?>
     </div>

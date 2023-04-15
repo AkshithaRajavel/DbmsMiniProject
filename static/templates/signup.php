@@ -17,7 +17,7 @@
         <input class="col" type="password" name="password" required></div>
         <div class="row">
         <label class="col">CONFIRM PASSWORD:</label>
-        <input class="col" type="text" name="con_password" required></div>
+        <input class="col" type="password" name="con_password" required></div>
         <button type="submit" class=btn>Signup</button>
         </div>
         <h3 class="error">

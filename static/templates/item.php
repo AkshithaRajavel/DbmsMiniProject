@@ -11,7 +11,7 @@ echo "
 else{
 echo "
 <form action='/api/update' method=post>
-<input value=$type name='type' hidden>
+<input value='$type' name='type' hidden>
 <input value='$title'name='old_title' hidden>
 <h5 class='card-title'> TITLE</h5>
 <input value='$title'name='title'>

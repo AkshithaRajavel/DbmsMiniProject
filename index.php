@@ -1,8 +1,6 @@
 <?php
 $_ENV = parse_ini_file('.env');
-if(!array_key_exists('con', $_ENV)){
-$_ENV['con'] = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
-}
+error_log(getenv('Name'));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,8 +21,9 @@ $error="";
 function login(){
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
     $sql = "SELECT password FROM users WHERE email='$email'";
-    $query = mysqli_query($_ENV['con'],$sql);
+    $query = mysqli_query($con,$sql);
     $res = mysqli_fetch_assoc($query);
     if($res){
         if($res['password']==$password){
@@ -47,15 +46,16 @@ function signup(){
     $con_password = $_POST['con_password'];
     if($con_password!=$password)$error="password inconsistent";
     else{
+    $con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
     $sql = "SELECT * FROM users WHERE email='$email'";
-    $query = mysqli_query($_ENV['con'],$sql);
+    $query = mysqli_query($con,$sql);
     $res = mysqli_fetch_assoc($query);
     if ($res){
         $error = "user exists";
     }
     else{
         $sql = "INSERT INTO users VALUES('$email','$password')";
-        mysqli_query($_ENV['con'],$sql);
+        mysqli_query($con,$sql);
         setcookie('email',$email,0,'/');
         header('location: /');
         exit;
@@ -73,6 +73,7 @@ function create(){
     $description = $_POST['description'];
     $image = $_POST['image'];
     $fee = $_POST['fee'];
+    $con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
     $sql = "INSERT INTO {$type}s VALUES(
         '$title',
         '$description',
@@ -80,7 +81,7 @@ function create(){
         '$fee'
     )";
     try{
-        mysqli_query($_ENV['con'],$sql);
+        mysqli_query($con,$sql);
         header('location: /dashboard');}
     catch(Exception $e){echo "<h1>$type : $title already exists</h1>";}
 }
@@ -91,6 +92,7 @@ function update(){
     $description = $_POST['description'];
     $image = $_POST['image'];
     $fee = $_POST['fee'];
+    $con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
     $sql = "
     UPDATE {$type}s
     SET 
@@ -101,32 +103,35 @@ function update(){
     WHERE title='$oldTitle'
     ";
     try{
-    mysqli_query($_ENV['con'],$sql);
+    mysqli_query($con,$sql);
     header('location: /dashboard');}
     catch(Exception $e){echo "<h1>$type : $title already exists</h1>";}
 }
 function add(){
     $type = $_POST['type'];
     $title = $_POST['title'];
+    error_log(ord($title[5]));
     $email = $_COOKIE['email'];
+    $con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
     $sql = "INSERT INTO {$type}_registrations VALUES(
         '$email',
         '$title'
     )";
     try{
-    mysqli_query($_ENV['con'],$sql);}
-    catch(Exception $e){}
+    mysqli_query($con,$sql);}
+    catch(Exception $e){error_log($e);}
 }
 function del(){
     $type = $_POST['type'];
     $title = $_POST['title'];
     $email = $_COOKIE['email'];
+    $con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
     if($email=='admin'){
         $sql="DELETE FROM {$type}s WHERE title='$title'";}
     else{
         $sql = "DELETE FROM {$type}_registrations
     WHERE user_email='$email' AND $type='$title'";}
-    mysqli_query($_ENV['con'],$sql);
+    mysqli_query($con,$sql);
 }
 function isLoggedIn(){
     if(isset($_COOKIE['email']))return 1;

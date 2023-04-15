@@ -6,6 +6,9 @@
         },function(){document.location.href="/dashboard"});
     }
 </script>
+<?php 
+$con = mysqli_connect($_ENV['host'],$_ENV['username'],$_ENV['password'],$_ENV['dbname']);
+?>
 <body class="m-2 p-2 m-lg-3">
 <!--NAVIGATION BAR-->
 <div class="container-fluid position-sticky top-0 p-3 mb-3 bg-white d-block d-lg-none">
@@ -47,7 +50,7 @@
         SELECT event FROM event_registrations 
         WHERE user_email='$email'
     )";
-    $events = mysqli_query($_ENV['con'],$sql);
+    $events = mysqli_query($con,$sql);
     while($Q_result = mysqli_fetch_assoc($events)){
         $title=$Q_result['title'];
         $description=$Q_result['description'];
@@ -67,7 +70,7 @@
         SELECT stall FROM stall_registrations 
         WHERE user_email='$email'
     )";
-    $stalls = mysqli_query($_ENV['con'],$sql);
+    $stalls = mysqli_query($con,$sql);
     while($Q_result = mysqli_fetch_assoc($stalls)){
         $title=$Q_result['title'];
         $description=$Q_result['description'];
